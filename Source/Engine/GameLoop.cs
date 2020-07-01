@@ -3,11 +3,18 @@ using System.Drawing;
 using System.Threading.Tasks;
 
 namespace Planets {
+
+    public interface IDrawable {
+        void Draw (Graphics graphics);
+    }
+
     public class GameLoop : IDrawable {
 
         private readonly Game m_game = new Game ();
         private bool m_running = false;
 
+        public const int SCREEN_WIDTH = 1350;
+        public const int SCREEN_HEIGHT = 729;
         public const int FPS = 144;
 
         public async void Start () {
@@ -30,6 +37,5 @@ namespace Planets {
         public void Draw (Graphics graphics) {
             m_game.Draw (graphics);
         }
-
     }
 }

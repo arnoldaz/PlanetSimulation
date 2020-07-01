@@ -23,11 +23,20 @@ namespace Planets {
         public static Vector operator * (Vector a, double b) => new Vector (a.x * b, a.y * b);
         public static Vector operator / (Vector a, double b) => new Vector (a.x / b, a.y / b);
 
-
+        /// <summary>
+        /// Calculates distance between this and other point.
+        /// </summary>
+        /// <param name="other">Destination point.</param>
+        /// <returns>Distance.</returns>
         public double Distance (Vector other) {
             return Math.Sqrt (Math.Pow (other.x - x, 2) + Math.Pow (other.y - y, 2));
         }
 
+        /// <summary>
+        /// Calculates direction from this to other point.
+        /// </summary>
+        /// <param name="other">Destination point.</param>
+        /// <returns>Unit vector from this to other point.</returns>
         public Vector Direction (Vector other) {
             return (other - this) / Distance (other);
         }

@@ -24,7 +24,7 @@ namespace Planets {
         }
 
         private void GraphicsTimer_Tick (object sender, EventArgs e) {
-            PictureBox.Invalidate ();
+            PictureBox.Invalidate (); 
         }
     }
 }
