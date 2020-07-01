@@ -18,6 +18,14 @@ namespace Planets {
         private readonly Brush m_planetBrush;
         private readonly Pen m_trailPen = new Pen (Color.White);
 
+        /// <summary>
+        /// Planet constructor.
+        /// </summary>
+        /// <param name="mass">Planet mass in kg.</param>
+        /// <param name="radius">Planet radius in pixels.</param>
+        /// <param name="position">Coordinates of planet center.</param>
+        /// <param name="initialVelocity">Force and direction of initial velocity.</param>
+        /// <param name="color">Planet color.</param>
         public Planet (double mass, double radius, Vector position, Vector initialVelocity, Color color) {
             m_mass = mass;
             m_radius = radius;
@@ -27,6 +35,10 @@ namespace Planets {
             m_previousPositions.Add (position);
         }
 
+        /// <summary>
+        /// Draws trail from all of previous planet positions.
+        /// </summary>
+        /// <param name="graphics">Graphics object.</param>
         public void DrawTrail (Graphics graphics) {
             var drawablePreviousPositions = m_previousPositions.Select (x => x.ToDrawable (GameLoop.SCREEN_HEIGHT));
             var drawablePosition = m_currentPosition.ToDrawable (GameLoop.SCREEN_HEIGHT);
@@ -38,6 +50,10 @@ namespace Planets {
             m_previousPositions.Add (new Vector (m_currentPosition));
         }
 
+        /// <summary>
+        /// Draws planet at current position.
+        /// </summary>
+        /// <param name="graphics">Graphics object.</param>
         public void Draw (Graphics graphics) {
             var drawablePosition = m_currentPosition.ToDrawable (GameLoop.SCREEN_HEIGHT);
 
@@ -50,11 +66,16 @@ namespace Planets {
             );
         }
 
-        public void UpdateVelocity (TimeSpan gameTime, List<Planet> spaceBodies) {
-            spaceBodies.Where (x => x != this).ToList ()
-                .ForEach (otherBody => {
-                    var direction = m_currentPosition.Direction (otherBody.m_currentPosition);
-                    var force = Game.GRAVITATIONAL_CONSTANT * m_mass * otherBody.m_mass / Math.Pow (m_currentPosition.Distance (otherBody.m_currentPosition), 2);
+        /// <summary>
+        /// Update planet velocity using all other planets.
+        /// </summary>
+        /// <param name="gameTime">Passed time from previous frame.</param>
+        /// <param name="planets">All planets.</param>
+        public void UpdateVelocity (TimeSpan gameTime, List<Planet> planets) {
+            planets.Where (x => x != this).ToList ()
+                .ForEach (otherPlanet => {
+                    var direction = m_currentPosition.Direction (otherPlanet.m_currentPosition);
+                    var force = Game.GRAVITATIONAL_CONSTANT * m_mass * otherPlanet.m_mass / Math.Pow (m_currentPosition.Distance (otherPlanet.m_currentPosition), 2);
                     var directedForce = direction * force;
                     var acceleration = directedForce / m_mass;
 
@@ -62,6 +83,10 @@ namespace Planets {
                 });
         }
 
+        /// <summary>
+        /// Update planet position using current velocity.
+        /// </summary>
+        /// <param name="gameTime">Passed time from previous frame.</param>
         public void UpdatePosition (TimeSpan gameTime) {
             m_currentPosition += m_currentVelocity * gameTime.TotalSeconds;
         }
